@@ -1,15 +1,48 @@
 import hostedPet from '../database/models/hostedPet.js';
+import { calculateDailyInfo } from '../utils/calculateDailyInfo.js';
 
 export const getHostedPets = async (req, res) => {
     try {
-        const hostedPets = await hostedPet.find();
-        res.json(hostedPets);
-        console.log('sucesso na requisição,pets hospedados:', hostedPets);
+      const pets = await hostedPet.find();
+      const petsWithInfo = pets.map(pet => {
+        const { currentDailyCount, totalExpectedDaily } = calculateDailyInfo(pet);
+        return {
+          ...pet.toObject(),               // converter o mongose doc pra objet JS
+          currentDailyCount,               // adicionar a contagem atual
+          totalExpectedDaily               // adicionar o total esperado
+        };
+      });
+  
+      console.log('sucesso na requisição, pets hospedados:', petsWithInfo);
+      res.json(petsWithInfo);
     } catch (error) {
-        res.send(error.message);
-        console.error('erro getAllHostedPets:', error.message);
+      console.error('erro getAllHostedPets:', error.message);
+      res.send(error.message);
     }
-}
+  };
+  
+
+  export const getHostedPetById = async (req, res) => {
+    try {
+      const pet = await hostedPet.findById(req.params.id);
+      if (!pet) {
+        return res.status(404).send({ error: 'Pet não encontrado' });
+      }
+  
+      const { currentDailyCount, totalExpectedDaily } = calculateDailyInfo(pet);
+      const petWithInfo = {
+        ...pet.toObject(),
+        currentDailyCount,
+        totalExpectedDaily
+      };
+  
+      console.log('sucesso na requisição, pet hospedado:', petWithInfo);
+      res.json(petWithInfo);
+    } catch (error) {
+      console.error('erro getHostedPetById:', error.message);
+      res.send(error.message);
+    }
+  };
 
 export const createHostedPet = async (req, res) => {
     try {

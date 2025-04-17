@@ -1,9 +1,13 @@
 {
   "dependencies": {
     "caotrolinn.api": "file:",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "mongoose": "^8.13.2"
+    "install": "^0.13.0",
+    "mongoose": "^8.13.2",
+    "npm": "^11.3.0",
+    "react-native-datepicker": "^1.7.2"
   },
   "name": "caotrolinn.api",
   "version": "1.0.0",

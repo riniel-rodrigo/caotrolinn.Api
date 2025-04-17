@@ -4,11 +4,14 @@ const hostedPetSchema = new mongoose.Schema({
     petName: String,
     petOwner: String,
     contact: String,
-    species: String,
+    species: {
+        type: String,
+        enum: ['dog', 'cat'],
+    },
     breed: String,
     inputDate: { type: Date, default: Date.now },
     estimatedDeparture: Date,
-    dailyRate: Number,
+    currentDailyCount: Number,
     totalExpectedDaily: Number,
 });
 
